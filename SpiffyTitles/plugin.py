@@ -150,6 +150,7 @@ class SpiffyTitles(callbacks.Plugin):
         now = time.time()
         try:
             if now < self.lastRun + self.registryValue("ignoreInterval"):
+               log.info('Ignoring ({}s) msg: {}'.format(int(now - self.lastRun), msg))
                return
         except registry.NonExistentRegistryEntry as ex:
             self.setRegistryValue("ignoreInterval", value=15.0)
