@@ -145,18 +145,6 @@ class SpiffyTitles(callbacks.Plugin):
 
     def doPrivmsg(self, irc, msg):
         """
-        Check to see if last run recently
-        """
-        now = time.time()
-        try:
-            if now < self.lastRun + self.registryValue("ignoreInterval"):
-               log.info('Ignoring ({}s) msg: {}'.format(int(now - self.lastRun), msg))
-               return
-        except registry.NonExistentRegistryEntry as ex:
-            self.setRegistryValue("ignoreInterval", value=15.0)
-        self.lastRun = now
-
-        """
         Observe each channel message and look for links
         """
         channel = msg.args[0]
@@ -172,6 +160,19 @@ class SpiffyTitles(callbacks.Plugin):
             return
         if ircdb.checkIgnored(msg.prefix, channel):
             return
+
+        """
+        Check to see if last run recently
+        """
+        now = time.time()
+        try:
+            if now < self.lastRun + self.registryValue("ignoreInterval"):
+               log.info('Ignoring ({}s) msg: {}'.format(int(now - self.lastRun), msg))
+               return
+        except registry.NonExistentRegistryEntry as ex:
+            self.setRegistryValue("ignoreInterval", value=15.0)
+        self.lastRun = now
+
         """
         Check if we require a capability to acknowledge this link
         """
