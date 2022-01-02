@@ -56,6 +56,7 @@ class SpiffyTitles(callbacks.Plugin):
 
     threaded = True
     callBefore = ["Web"]
+    lastRun = 0.0
 
     def __init__(self, irc):
         self.__parent = super(SpiffyTitles, self)
@@ -142,6 +143,14 @@ class SpiffyTitles(callbacks.Plugin):
         self.handlers["imgur.com"] = self.handler_imgur
 
     def doPrivmsg(self, irc, msg):
+        """
+        Check to see if last run recently
+        """
+        now = time.time()
+        if now < self.lastRun + self.registryValue("ignoreInterval"):
+            return
+        self.lastRun = now
+
         """
         Observe each channel message and look for links
         """
