@@ -65,6 +65,12 @@ conf.registerGlobalValue(
     registry.Integer(10, _("""Maximum time in seconds to try and retrieve a link""")),
 )
 
+conf.registerGlobalValue(
+    SpiffyTitles,
+    "ignoreInterval",
+    registry.Float(15.0, _("""Minimum time in seconds between processed URLs""")),
+)
+
 # URL regex
 conf.registerChannelValue(
     SpiffyTitles,
