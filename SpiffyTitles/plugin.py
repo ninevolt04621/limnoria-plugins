@@ -35,6 +35,7 @@ import supybot.utils as utils
 import supybot.ircdb as ircdb
 import supybot.log as log
 import supybot.conf as conf
+import supybot.registry as registry
 import re, sys, random, time, json, unicodedata, datetime
 from urllib.parse import urlparse, parse_qsl
 from bs4 import BeautifulSoup
@@ -147,8 +148,11 @@ class SpiffyTitles(callbacks.Plugin):
         Check to see if last run recently
         """
         now = time.time()
-        if now < self.lastRun + self.registryValue("ignoreInterval"):
-            return
+        try:
+            if now < self.lastRun + self.registryValue("ignoreInterval"):
+               return
+        except registry.NonExistentRegistryEntry as ex:
+            self.setRegistryValue("ignoreInterval", value=15.0)
         self.lastRun = now
 
         """
